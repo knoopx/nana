@@ -178,11 +178,11 @@ export const Prompt = forwardRef<HTMLDivElement, PromptPropType>(
 
         return (
             <div ref={ref} className="flex flex-col space-y-1">
-                <div className="!ml-auto text-sm text-neutral-500">
+                <div className="!ml-auto text-sm text-base-content text-opacity-50">
                     {workingDir}
                 </div>
                 <div className="relative flex items-center">
-                    <div className="absolute -ml-6 text-center text-neutral-500">
+                    <div className="text-neutral-500 absolute -ml-6 text-center">
                         {isLoading && <Spinner />}
                     </div>
                     <input
@@ -190,7 +190,7 @@ export const Prompt = forwardRef<HTMLDivElement, PromptPropType>(
                         autoFocus
                         autoCapitalize="none"
                         type="text"
-                        className="w-full rounded bg-neutral-700 px-2 py-1"
+                        className="w-full rounded bg-base-200 px-2 py-1 text-accent"
                         value={input}
                         onKeyDown={handleKeyDown}
                         onChange={(e) => {

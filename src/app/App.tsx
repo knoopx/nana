@@ -92,7 +92,10 @@ export default () => {
     };
 
     return (
-        <main className="px-8 py-4 space-y-6">
+        <main
+            data-theme={localStorage.getItem("theme")}
+            className="base-100 min-h-screen space-y-6 px-8 py-4 font-mono text-base-content"
+        >
             <ResultList results={results} />
 
             <Prompt

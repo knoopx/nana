@@ -30,7 +30,8 @@ const CompletionItem = ({
             {...props}
             ref={ref}
             className={classNames("scroll-mt-0 px-2 py-1", {
-                "bg-neutral-700": active,
+                "bg-accent text-accent-content": active,
+                "text-accent": !active,
             })}
         >
             {completion.completion}
@@ -53,7 +54,7 @@ export const CompletionList = ({
         <ul
             ref={ref}
             className={classNames(
-                "absolute left-0 z-50 max-h-64 divide-y divide-neutral-600 overflow-hidden overflow-y-auto rounded border border-neutral-600 bg-neutral-800 shadow",
+                "absolute left-0 z-50 max-h-64 divide-y divide-neutral overflow-hidden overflow-y-auto rounded border border-neutral bg-neutral-focus shadow",
                 {
                     "bottom-full": positionUp,
                     "top-full": !positionUp,

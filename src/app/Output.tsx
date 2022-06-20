@@ -6,28 +6,51 @@ import {
     UInt8ArrayToString,
 } from "../support/formatting";
 
-const defaultCellClassName =
-    "default:border default:border-neutral-600 default:p-2";
-
-const Table = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
+const Table = ({
+    className,
+    children,
+    ...props
+}: HTMLAttributes<HTMLDivElement>) => (
     <table
         className={classNames(
             className,
-            "border-collapse overflow-hidden rounded"
+            "table-compact overflow-hidden rounded"
         )}
         {...props}
-    />
+    >
+        {children}
+    </table>
 );
 
 const Row = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
     <tr
         className={classNames(
             className,
-            "default:odd:bg-neutral-800 default:even:bg-[rgba(255,255,255,.03)]"
+            "hover odd:bg-base-200 even:bg-base-300"
         )}
         {...props}
     />
 );
+
+const Cell = ({
+    header,
+    className,
+    ...props
+}: HTMLAttributes<HTMLDivElement> & {
+    header?: boolean;
+}) => {
+    const Component = header ? "th" : "td";
+    return (
+        <Component
+            className={classNames(
+                className,
+                "border border-base-300  text-left",
+                {}
+            )}
+            {...props}
+        />
+    );
+};
 
 const Image = ({ value, type }: { value: any; type: string }) => (
     <img
@@ -60,7 +83,7 @@ const Pre = ({
         <pre
             className={classNames(
                 className,
-                "overflow-auto rounded bg-neutral-900 p-4"
+                "overflow-auto rounded bg-base-300 p-4"
             )}
             {...props}
         >
@@ -74,10 +97,10 @@ const Record = ({ value: { cols, vals } }: { value: any }) => (
         <tbody>
             {vals.map((val: any, i: number) => (
                 <Row key={i}>
-                    <th className={defaultCellClassName}>{cols[i]}</th>
-                    <td className={defaultCellClassName}>
+                    <Cell header>{cols[i]}</Cell>
+                    <Cell>
                         <Output value={val} />
-                    </td>
+                    </Cell>
                 </Row>
             ))}
         </tbody>
@@ -88,42 +111,42 @@ const List = ({ value: { vals } }: { value: any }): any => {
     if (vals.length > 0) {
         const isRecordList = vals.every((v: any) => v.Record);
         const cols = isRecordList ? vals[0].Record.cols : [];
+        const Columns = (
+            <thead>
+                <Row>
+                    {cols.map((col: string, i: number) => (
+                        <Cell header key={i}>
+                            {col}
+                        </Cell>
+                    ))}
+                </Row>
+            </thead>
+        );
+
         return (
             <Table>
+                {Columns}
                 <tbody>
-                    <Row>
-                        {cols.map((col: string, i: number) => (
-                            <th
-                                key={i}
-                                className={classNames(
-                                    "font-bold",
-                                    defaultCellClassName
-                                )}
-                            >
-                                {col}
-                            </th>
-                        ))}
-                    </Row>
-
                     {vals.map((value: any, i: number) => (
                         <Row key={i}>
                             {isRecordList ? (
                                 value.Record.vals.map((v: any, j: number) => (
-                                    <td
-                                        key={j}
-                                        className={defaultCellClassName}
-                                    >
+                                    <Cell key={j}>
                                         <Output value={v}></Output>
-                                    </td>
+                                    </Cell>
                                 ))
                             ) : (
-                                <td className={defaultCellClassName}>
-                                    <Output value={value}></Output>
-                                </td>
+                                <>
+                                    {/* <Cell className="text-right">{i}</Cell> */}
+                                    <Cell>
+                                        <Output value={value}></Output>
+                                    </Cell>
+                                </>
                             )}
                         </Row>
                     ))}
                 </tbody>
+                {/* {Columns} */}
             </Table>
         );
     }

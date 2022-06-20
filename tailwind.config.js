@@ -27,6 +27,7 @@ module.exports = {
         },
     },
     plugins: [
+        require("daisyui"),
         ({ addVariant }) => {
             addVariant("default", "html :where(&)");
         },

@@ -31,21 +31,21 @@ export const Result = ({
             <div className="relative flex items-center">
                 <Indicator
                     className={classNames("absolute -ml-5", {
-                        "bg-green-500": typeof output !== "string",
-                        "bg-red-500": typeof output === "string",
+                        "bg-success": typeof output !== "string",
+                        "bg-error": typeof output === "string",
                     })}
                 />
                 <div className="space-x-4">
-                    <span className="font-bold">{input}</span>
+                    <span className="font-bold text-accent">{input}</span>
                     {duration ? (
-                        <span className="text-xs text-neutral-500">
+                        <span className="text-xs text-base-content text-opacity-50">
                             {humanDuration(duration)}
                         </span>
                     ) : null}
                 </div>
             </div>
 
-            <div className="!ml-auto text-sm text-neutral-500">
+            <div className="!ml-auto text-sm text-base-content text-opacity-50">
                 {workingDir}
             </div>
         </div>
