@@ -1,9 +1,33 @@
+import classNames from "classnames";
 import { HTMLAttributes } from "react";
 import {
     humanDuration,
     humanFileSize,
     UInt8ArrayToString,
 } from "../support/formatting";
+
+const defaultCellClassName =
+    "default:border default:border-neutral-600 default:p-2";
+
+const Table = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
+    <table
+        className={classNames(
+            className,
+            "border-collapse overflow-hidden rounded"
+        )}
+        {...props}
+    />
+);
+
+const Row = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
+    <tr
+        className={classNames(
+            className,
+            "default:odd:bg-neutral-800 default:even:bg-[rgba(255,255,255,.03)]"
+        )}
+        {...props}
+    />
+);
 
 const Image = ({ value, type }: { value: any; type: string }) => (
     <img
@@ -27,22 +51,37 @@ const Pre = ({
     className,
     ...props
 }: HTMLAttributes<HTMLPreElement>): any => {
-    return <pre {...props}>{children}</pre>;
+    if (typeof children === "string") {
+        if (children.split("\n").length == 1) {
+            return children;
+        }
+    }
+    return (
+        <pre
+            className={classNames(
+                className,
+                "overflow-auto rounded bg-neutral-900 p-4"
+            )}
+            {...props}
+        >
+            {children}
+        </pre>
+    );
 };
 
 const Record = ({ value: { cols, vals } }: { value: any }) => (
-    <table className="styled-table">
+    <Table>
         <tbody>
             {vals.map((val: any, i: number) => (
-                <tr key={i}>
-                    <th>{cols[i]}</th>
-                    <td>
+                <Row key={i}>
+                    <th className={defaultCellClassName}>{cols[i]}</th>
+                    <td className={defaultCellClassName}>
                         <Output value={val} />
                     </td>
-                </tr>
+                </Row>
             ))}
         </tbody>
-    </table>
+    </Table>
 );
 
 const List = ({ value: { vals } }: { value: any }): any => {
@@ -50,30 +89,42 @@ const List = ({ value: { vals } }: { value: any }): any => {
         const isRecordList = vals.every((v: any) => v.Record);
         const cols = isRecordList ? vals[0].Record.cols : [];
         return (
-            <table className="styled-table">
+            <Table>
                 <tbody>
-                    <tr>
+                    <Row>
                         {cols.map((col: string, i: number) => (
-                            <th key={i}>{col}</th>
+                            <th
+                                key={i}
+                                className={classNames(
+                                    "font-bold",
+                                    defaultCellClassName
+                                )}
+                            >
+                                {col}
+                            </th>
                         ))}
-                    </tr>
+                    </Row>
+
                     {vals.map((value: any, i: number) => (
-                        <tr key={i}>
+                        <Row key={i}>
                             {isRecordList ? (
                                 value.Record.vals.map((v: any, j: number) => (
-                                    <td key={j}>
+                                    <td
+                                        key={j}
+                                        className={defaultCellClassName}
+                                    >
                                         <Output value={v}></Output>
                                     </td>
                                 ))
                             ) : (
-                                <td>
+                                <td className={defaultCellClassName}>
                                     <Output value={value}></Output>
                                 </td>
                             )}
-                        </tr>
+                        </Row>
                     ))}
                 </tbody>
-            </table>
+            </Table>
         );
     }
 
